@@ -11,23 +11,23 @@ class AppTheme {
       
       // Text Theme
       textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-        displayLarge: const TextStyle(
+        displayLarge: TextStyle(
           color: AppColors.textPrimary,
           fontSize: AppSizes.h1,
           fontWeight: FontWeight.w900, // Extra Bold
           letterSpacing: -1.0,
         ),
-        displayMedium: const TextStyle(
+        displayMedium: TextStyle(
           color: AppColors.textPrimary,
           fontSize: AppSizes.h2,
           fontWeight: FontWeight.w800,
         ),
-        bodyLarge: const TextStyle(
+        bodyLarge: TextStyle(
           color: AppColors.textPrimary,
           fontSize: AppSizes.body,
           fontWeight: FontWeight.w600,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           color: AppColors.textSecondary,
           fontSize: AppSizes.small,
           fontWeight: FontWeight.w500,

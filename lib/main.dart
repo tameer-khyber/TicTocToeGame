@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/theme_service.dart';
 import 'routes/app_routes.dart';
 
 void main() {
+  Get.put(ThemeService());
   runApp(const MyApp());
 }
 
