@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/widgets/animated_background.dart';
+import '../../../core/widgets/animated_scale_button.dart';
 import '../controllers/game_over_controller.dart';
 
 class GameOverView extends GetView<GameOverController> {
@@ -53,22 +54,29 @@ class GameOverView extends GetView<GameOverController> {
                 child: SizedBox(
                   width: 220,
                   height: 60,
-                  child: ElevatedButton(
+                  child: AnimatedScaleButton(
                     onPressed: controller.onRestart,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.playerX,
-                      foregroundColor: Colors.white,
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.playerX,
                         borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                            BoxShadow(
+                              color: AppColors.playerX.withValues(alpha: 0.5),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            )
+                        ]
                       ),
-                    ),
-                    child: const Text(
-                      'RESTART GAME',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'RESTART GAME',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -80,21 +88,23 @@ class GameOverView extends GetView<GameOverController> {
                 child: SizedBox(
                   width: 220,
                   height: 60,
-                  child: OutlinedButton(
+                  child: AnimatedScaleButton(
                     onPressed: controller.onExit,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary,
-                      side: BorderSide(color: AppColors.textPrimary, width: 2),
-                      shape: RoundedRectangleBorder(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: AppColors.textPrimary, width: 2),
                       ),
-                    ),
-                    child: const Text(
-                      'GO TO HOME',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'GO TO HOME',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),

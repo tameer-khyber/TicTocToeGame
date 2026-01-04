@@ -76,35 +76,87 @@ class HomeView extends GetView<HomeController> {
                 const SizedBox(height: AppSizes.p64),
                 FadeInUp(
                   delay: const Duration(milliseconds: 600),
-                  child: SizedBox(
-                    width: 200,
-                    height: 60,
-                    child: AnimatedScaleButton(
-                      onPressed: controller.onPlayGame,
-                      child: Container(
-                        decoration: BoxDecoration(
-                           color: AppColors.playerX,
-                           borderRadius: BorderRadius.circular(30),
-                           boxShadow: [
-                             BoxShadow(
-                               color: AppColors.playerX.withValues(alpha: 0.5),
-                               blurRadius: 15,
-                               offset: const Offset(0, 8),
-                             )
-                           ]
-                        ),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'PLAY GAME',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            color: Colors.white,
+                  child: Column(
+                    children: [
+                      // PvC Button
+                      SizedBox(
+                        width: 250,
+                        height: 60,
+                        child: AnimatedScaleButton(
+                          onPressed: controller.onPlayPvC,
+                          child: Container(
+                            decoration: BoxDecoration(
+                               color: AppColors.playerX,
+                               borderRadius: BorderRadius.circular(30),
+                               boxShadow: [
+                                 BoxShadow(
+                                   color: AppColors.playerX.withValues(alpha: 0.5),
+                                   blurRadius: 15,
+                                   offset: const Offset(0, 8),
+                                 )
+                               ]
+                            ),
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.computer, color: Colors.white, size: 28),
+                                const SizedBox(width: 12),
+                                const Text(
+                                  'VS COMPUTER',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: AppSizes.p24),
+                      // PvP Button
+                      SizedBox(
+                        width: 250,
+                        height: 60,
+                        child: AnimatedScaleButton(
+                          onPressed: controller.onPlayPvP,
+                          child: Container(
+                            decoration: BoxDecoration(
+                               color: AppColors.surface,
+                               borderRadius: BorderRadius.circular(30),
+                               border: Border.all(color: AppColors.playerO, width: 2),
+                               boxShadow: [
+                                 BoxShadow(
+                                   color: AppColors.playerO.withValues(alpha: 0.2),
+                                   blurRadius: 15,
+                                   offset: const Offset(0, 8),
+                                 )
+                               ]
+                            ),
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.people_alt_rounded, color: AppColors.playerO, size: 28),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'VS FRIEND',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                    color: AppColors.playerO,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -122,7 +174,7 @@ class HomeView extends GetView<HomeController> {
                     delay: const Duration(milliseconds: 800),
                     child: AnimatedScaleButton(
                       onPressed: () => Get.find<ThemeService>().cycleTheme(),
-                      scale: 0.9,
+                      tapScale: 0.9,
                       child: _buildIconButtonContent(
                         icon: Icons.palette_outlined,
                         color: AppColors.playerX,
@@ -133,7 +185,7 @@ class HomeView extends GetView<HomeController> {
                     delay: const Duration(milliseconds: 900),
                     child: AnimatedScaleButton(
                       onPressed: controller.onExitApp,
-                      scale: 0.9,
+                      tapScale: 0.9,
                       child: _buildIconButtonContent(
                         icon: Icons.exit_to_app_rounded,
                         color: AppColors.playerX,
