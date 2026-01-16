@@ -19,6 +19,7 @@ class GameView extends GetView<GameViewModel> {
         title: FadeInDown(
           child: const Text(AppStrings.appTitle),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -34,7 +35,7 @@ class GameView extends GetView<GameViewModel> {
         children: [
           // Background
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -183,18 +184,7 @@ class GameView extends GetView<GameViewModel> {
 
                   const SizedBox(height: AppSizes.p48),
 
-                  // Restart Button
-                  FadeInUp(
-                    delay: const Duration(milliseconds: 400),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56, // Taller button
-                      child: ElevatedButton(
-                        onPressed: () => controller.resetGame(),
-                        child: const Text('RESTART GAME'), // Caps for style
-                      ),
-                    ),
-                  ),
+                  // Restart Button removed
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
+import '../../../routes/app_routes.dart';
 import '../../../data/models/player_model.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_colors.dart';
@@ -63,8 +64,14 @@ class GameViewModel extends GetxController {
     if (_checkWinner(currentPlayer.value)) {
       winner.value = currentPlayer.value;
       confettiController.play();
+      Future.delayed(const Duration(seconds: 2), () {
+        Get.offNamed(AppRoutes.gameOver, arguments: winner.value == Player.X ? AppStrings.winX : AppStrings.winO);
+      });
     } else if (!board.contains(Player.none)) {
       isDraw.value = true;
+      Future.delayed(const Duration(seconds: 2), () {
+        Get.offNamed(AppRoutes.gameOver, arguments: AppStrings.draw);
+      });
     } else {
       currentPlayer.value = currentPlayer.value == Player.X ? Player.O : Player.X;
     }
