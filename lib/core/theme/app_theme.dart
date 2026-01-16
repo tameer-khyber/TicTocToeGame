@@ -1,69 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
-import '../constants/app_sizes.dart';
+import 'theme_config.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: AppColors.playerX,
-      scaffoldBackgroundColor: AppColors.bgGradientTop, // Fallback
+      scaffoldBackgroundColor: AppColors.bgGradientTop,
       
-      // Text Theme
+      // Text Theme - Using centralized typography
       textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-        displayLarge: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: AppSizes.h1,
-          fontWeight: FontWeight.w900, // Extra Bold
-          letterSpacing: -1.0,
-        ),
-        displayMedium: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: AppSizes.h2,
-          fontWeight: FontWeight.w800,
-        ),
-        bodyLarge: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: AppSizes.body,
-          fontWeight: FontWeight.w600,
-        ),
-        bodyMedium: TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: AppSizes.small,
-          fontWeight: FontWeight.w500,
-        ),
+        displayLarge: AppThemeConfig.h1Style(),
+        displayMedium: AppThemeConfig.h2Style(),
+        headlineSmall: AppThemeConfig.h3Style(),
+        titleLarge: AppThemeConfig.h4Style(),
+        bodyLarge: AppThemeConfig.bodyStyle(),
+        bodyMedium: AppThemeConfig.smallStyle(),
+        bodySmall: AppThemeConfig.captionStyle(),
       ),
       
-      // Card Theme
+      // Card Theme - Using centralized decorations
       cardTheme: CardThemeData(
         color: AppColors.surface,
         elevation: 8,
         shadowColor: AppColors.shadow,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.r16),
+          borderRadius: BorderRadius.circular(AppThemeConfig.r16),
         ),
       ),
       
-      // Button Theme
+      // Elevated Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.playerX, // Dark Coffee
-          foregroundColor: AppColors.bgGradientTop, // Cream text
+          backgroundColor: AppColors.buttonPrimary,
+          foregroundColor: AppColors.onButtonPrimary,
           elevation: 6,
-          shadowColor: AppColors.playerX.withValues(alpha: 0.5),
+          shadowColor: AppColors.shadow.withValues(alpha: 0.5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.r12),
+            borderRadius: BorderRadius.circular(AppThemeConfig.r12),
           ),
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.p32,
-            vertical: AppSizes.p16,
+            horizontal: AppThemeConfig.p32,
+            vertical: AppThemeConfig.p16,
           ),
-          textStyle: const TextStyle(
-            fontSize: AppSizes.body,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.0,
-          ),
+          textStyle: AppThemeConfig.buttonStyle(),
         ),
+      ),
+      
+      // Outlined Button Theme
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.buttonSecondary,
+          side: BorderSide(color: AppColors.buttonSecondary, width: 2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppThemeConfig.r12),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppThemeConfig.p32,
+            vertical: AppThemeConfig.p16,
+          ),
+          textStyle: AppThemeConfig.buttonStyle(color: AppColors.buttonSecondary),
+        ),
+      ),
+      
+      // App Bar Theme
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: AppThemeConfig.h2Style(),
+        iconTheme: IconThemeData(color: AppColors.textPrimary),
+      ),
+      
+      // Icon Theme
+      iconTheme: IconThemeData(
+        color: AppColors.textPrimary,
+        size: 24,
       ),
     );
   }

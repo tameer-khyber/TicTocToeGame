@@ -1,40 +1,30 @@
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
-
-import '../../../core/enums/game_enums.dart';
+import '../../../core/utils/navigation_helpers.dart';
+import '../../../data/models/game_arguments.dart';
 
 class GameOverController extends GetxController {
   late String result;
-  late GameMode gameMode;
-  late GameDifficulty difficulty;
+  late GameArguments gameArguments;
 
   @override
   void onInit() {
     super.onInit();
     final args = Get.arguments;
-    if (args is Map) {
+    if (args is Map<String, dynamic>) {
       result = args['result'] ?? '';
-      gameMode = args['mode'] ?? GameMode.pvp;
-      difficulty = args['difficulty'] ?? GameDifficulty.easy;
+      gameArguments = GameArguments.fromMap(args);
     } else {
-      // Fallback for safety (though normally we pass map now)
+      // Fallback for safety
       result = args.toString();
-      gameMode = GameMode.pvp;
-      difficulty = GameDifficulty.easy;
+      gameArguments = GameArguments.pvp();
     }
   }
 
   void onRestart() {
-    Get.offNamed(
-      AppRoutes.game, 
-      arguments: {
-        'mode': gameMode, 
-        'difficulty': difficulty
-      }
-    );
+    NavigationHelpers.navigateToGame(gameArguments);
   }
 
   void onExit() {
-    Get.offAllNamed(AppRoutes.home);
+    NavigationHelpers.navigateToHome();
   }
 }

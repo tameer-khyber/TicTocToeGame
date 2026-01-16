@@ -8,12 +8,15 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/game_over/views/game_over_view.dart';
 import '../modules/game_over/bindings/game_over_binding.dart';
 import '../modules/difficulty/views/difficulty_view.dart';
+import '../modules/player_setup/views/player_setup_view.dart';
+import '../modules/player_setup/bindings/player_setup_binding.dart';
 import '../modules/difficulty/bindings/difficulty_binding.dart';
 
 class AppRoutes {
   static const String splash = '/';
   static const String home = '/home';
   static const difficulty = '/difficulty';
+  static const String playerSetup = '/player_setup';
   static const String game = '/game';
   static const String gameOver = '/game_over';
 
@@ -33,6 +36,12 @@ class AppRoutes {
       name: difficulty,
       page: () => const DifficultyView(),
       binding: DifficultyBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: playerSetup,
+      page: () => const PlayerSetupView(),
+      binding: PlayerSetupBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(

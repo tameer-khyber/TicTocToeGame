@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/player_model.dart';
-import '../../../core/constants/app_colors.dart';
 
 class DrawingMark extends StatefulWidget {
   final Player player;

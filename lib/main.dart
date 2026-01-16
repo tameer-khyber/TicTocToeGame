@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/theme_service.dart';
@@ -6,6 +7,11 @@ import 'routes/app_routes.dart';
 import 'core/services/audio_service.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   Get.put(ThemeService());
   Get.put(AudioService());
   runApp(const MyApp());

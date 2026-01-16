@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
-import '../../../routes/app_routes.dart';
+import 'package:flutter/material.dart';
 import '../../../data/models/player_model.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/services/audio_service.dart';
 import '../../../core/enums/game_enums.dart';
 import '../../../core/utils/ai_utils.dart';
-import 'package:flutter/material.dart';
+import '../../../core/utils/navigation_helpers.dart';
+import '../../../data/models/game_arguments.dart';
 
 class GameViewModel extends GetxController {
   // Observables
@@ -16,15 +17,15 @@ class GameViewModel extends GetxController {
   var winner = Player.none.obs;
   var isDraw = false.obs;
   var winningLine = <int>[].obs; // Indices of winning cells for different styling
+  var isProcessingMove = false.obs; // Prevent double-clicks during animations
   
   final AudioService _audioService = Get.find<AudioService>();
   
   late ConfettiController confettiController;
 
   // Game Config
-  late GameMode gameMode;
-  late GameDifficulty difficulty;
-  bool get isPvC => gameMode == GameMode.pvc;
+  late GameArguments gameArguments;
+  bool get isPvC => gameArguments.mode == GameMode.pvc;
 
   @override
   void onInit() {
@@ -33,11 +34,8 @@ class GameViewModel extends GetxController {
     
     // Parse arguments
     final args = Get.arguments as Map<String, dynamic>? ?? {};
-    gameMode = args['mode'] ?? GameMode.pvp;
-    difficulty = args['difficulty'] ?? GameDifficulty.easy;
+    gameArguments = GameArguments.fromMap(args);
   }
-
-
 
   @override
   void onClose() {
@@ -46,13 +44,17 @@ class GameViewModel extends GetxController {
   }
 
   // Computed Properties
-  String get turnText => currentPlayer.value == Player.X ? AppStrings.turnX : AppStrings.turnO;
+  String get turnText => currentPlayer.value == Player.X 
+      ? "${gameArguments.player1Name}'s Turn" 
+      : "${gameArguments.player2Name}'s Turn";
   
   Color get turnColor => currentPlayer.value == Player.X ? AppColors.playerX : AppColors.playerO;
 
   String get gameStatus {
     if (winner.value != Player.none) {
-      return winner.value == Player.X ? AppStrings.winX : AppStrings.winO;
+      return winner.value == Player.X 
+          ? "${gameArguments.player1Name} Wins!" 
+          : "${gameArguments.player2Name} Wins!";
     }
     if (isDraw.value) {
       return AppStrings.draw;
@@ -72,13 +74,22 @@ class GameViewModel extends GetxController {
 
   // Logic
   void makeMove(int index) {
-    if (board[index] != Player.none || winner.value != Player.none || isDraw.value) {
+    // Prevent moves if:
+    // - Cell is already occupied
+    // - Game is over
+    // - Currently processing another move
+    if (board[index] != Player.none || 
+        winner.value != Player.none || 
+        isDraw.value ||
+        isProcessingMove.value) {
       return;
     }
     
     // If it's Bot's turn (O) in PvC, block user click
     if (isPvC && currentPlayer.value == Player.O) return;
 
+    // Lock moves during processing
+    isProcessingMove.value = true;
     _executeMove(index);
   }
   
@@ -90,33 +101,46 @@ class GameViewModel extends GetxController {
       winner.value = currentPlayer.value;
       confettiController.play();
       _audioService.playWin();
-      Future.delayed(const Duration(seconds: 2), () {
-        Get.offNamed(AppRoutes.gameOver, arguments: {
-          'result': winner.value == Player.X ? AppStrings.winX : AppStrings.winO,
-          'mode': gameMode,
-          'difficulty': difficulty
-        });
-      });
+      final result = winner.value == Player.X 
+          ? "${gameArguments.player1Name} Wins!" 
+          : "${gameArguments.player2Name} Wins!";
+      _navigateToGameOver(result);
+      // Keep move locked until navigation
     } else if (!board.contains(Player.none)) {
       isDraw.value = true;
       _audioService.playDraw();
-      Future.delayed(const Duration(seconds: 2), () {
-        Get.offNamed(AppRoutes.gameOver, arguments: {
-          'result': AppStrings.draw,
-          'mode': gameMode,
-          'difficulty': difficulty
-        });
-      });
+      _navigateToGameOver(AppStrings.draw);
+      // Keep move locked until navigation
     } else {
+      // Switch player
       currentPlayer.value = currentPlayer.value == Player.X ? Player.O : Player.X;
-      _checkBotTurn();
+      
+      // Unlock moves after a brief delay for animation
+      Future.delayed(const Duration(milliseconds: 150), () {
+        isProcessingMove.value = false;
+        _checkBotTurn();
+      });
     }
+  }
+  
+  /// Navigate to game over screen with delay
+  void _navigateToGameOver(String result) {
+    Future.delayed(const Duration(seconds: 2), () {
+      NavigationHelpers.navigateToGameOver(
+        result: result,
+        gameArguments: gameArguments,
+      );
+    });
   }
   
   void _checkBotTurn() {
     if (isPvC && currentPlayer.value == Player.O && winner.value == Player.none && !isDraw.value) {
-      Future.delayed(const Duration(milliseconds: 600), () {
-         final aiMove = TicTacToeAI.getBestMove(board, difficulty);
+      // Lock moves during AI thinking
+      isProcessingMove.value = true;
+      
+      // Reduced delay from 600ms to 250ms for faster response
+      Future.delayed(const Duration(milliseconds: 250), () {
+         final aiMove = TicTacToeAI.getBestMove(board, gameArguments.difficulty);
          if (aiMove != -1) {
            _executeMove(aiMove);
          }
@@ -130,6 +154,7 @@ class GameViewModel extends GetxController {
     winner.value = Player.none;
     isDraw.value = false;
     winningLine.clear();
+    isProcessingMove.value = false;
     confettiController.stop();
   }
 

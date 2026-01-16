@@ -1,16 +1,30 @@
-# tictactoe
+# TicTacToe Game
 
-A new Flutter project.
+A Flutter Tic Tac Toe game with beautiful animations and AI opponent.
+
+## Supported Platforms
+
+This app is built for **Android** platform.
+
+**Note:** Web support is available for testing purposes only. Run on Chrome with `flutter run -d chrome`.
+
+## Features
+
+- 🎮 Player vs Player (PvP) mode
+- 🤖 Player vs Computer (PvC) mode with 3 difficulty levels
+- 🎨 3 beautiful themes (Classic, Sapphire, Obsidian)
+- ✨ Smooth animations and transitions
+- 🎵 Sound effects
+- 🎊 Confetti celebration on win
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Run on Android
+```bash
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Run on Web (Testing Only)
+```bash
+flutter run -d chrome
+```
