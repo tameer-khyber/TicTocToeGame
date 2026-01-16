@@ -22,10 +22,11 @@ class GameView extends GetView<GameViewModel> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        titleTextStyle: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w800,
+        titleTextStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+              fontWeight: FontWeight.w900,
               color: AppColors.textPrimary,
-              letterSpacing: 1.2,
+              letterSpacing: 2.0,
+              fontSize: 28, // Specific override for AppBar
             ),
       ),
       body: Stack(
@@ -91,17 +92,17 @@ class GameView extends GetView<GameViewModel> {
                         aspectRatio: 1,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5), // Glassmorphism base
+                            color: AppColors.surface.withValues(alpha: 0.6), // Richer glass
                             borderRadius: BorderRadius.circular(AppSizes.r24),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.6),
+                              color: AppColors.surface.withValues(alpha: 0.8),
                               width: 2,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.shadow, // Using shadow constant
-                                blurRadius: 24,
-                                offset: const Offset(0, 12),
+                                color: AppColors.shadow.withValues(alpha: 0.15),
+                                blurRadius: 40, // Softer, further spread
+                                offset: const Offset(0, 16),
                               ),
                             ],
                           ),
