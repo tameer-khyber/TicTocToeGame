@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/widgets/animated_background.dart';
 import '../controllers/game_over_controller.dart';
 
 class GameOverView extends GetView<GameOverController> {
@@ -11,19 +12,27 @@ class GameOverView extends GetView<GameOverController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.bgGradientTop,
-              AppColors.bgGradientBottom,
-            ],
+
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.bgGradientTop,
+                  AppColors.bgGradientBottom,
+                ],
+              ),
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
+          
+          // Animated Shapes Background
+          const Positioned.fill(child: AnimatedBackground()),
+
+          Center(
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ZoomIn(
@@ -94,6 +103,7 @@ class GameOverView extends GetView<GameOverController> {
             ],
           ),
         ),
+        ],
       ),
     ));
   }

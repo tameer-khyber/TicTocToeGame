@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../controllers/splash_controller.dart';
+import '../../../core/widgets/animated_background.dart';
 
 class SplashView extends GetView<SplashController> {
   const SplashView({super.key});
@@ -12,20 +13,27 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.bgGradientTop,
-              AppColors.bgGradientBottom,
-            ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.bgGradientTop,
+                  AppColors.bgGradientBottom,
+                ],
+              ),
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          
+          // Animated Shapes Background
+          const Positioned.fill(child: AnimatedBackground()),
+
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ZoomIn(
                 duration: const Duration(milliseconds: 1000),
@@ -96,6 +104,7 @@ class SplashView extends GetView<SplashController> {
             ],
           ),
         ),
+        ],
       ),
     );
   }

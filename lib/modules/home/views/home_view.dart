@@ -5,6 +5,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/services/theme_service.dart';
+import '../../../core/widgets/animated_background.dart';
+import '../../../core/widgets/animated_scale_button.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -15,7 +17,7 @@ class HomeView extends GetView<HomeController> {
     return Obx(() => Scaffold(
       body: Stack(
         children: [
-          // Background
+          // Background Gradient
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -29,6 +31,9 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           
+          // Animated Shapes Background
+          const Positioned.fill(child: AnimatedBackground()),
+          
           // Main Content
           Center(
             child: Column(
@@ -39,7 +44,7 @@ class HomeView extends GetView<HomeController> {
                   child: Container(
                     padding: const EdgeInsets.all(AppSizes.p24),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
+                      color: AppColors.surface.withValues(alpha: 0.9), // Glassy
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -74,23 +79,29 @@ class HomeView extends GetView<HomeController> {
                   child: SizedBox(
                     width: 200,
                     height: 60,
-                    child: ElevatedButton(
+                    child: AnimatedScaleButton(
                       onPressed: controller.onPlayGame,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.playerX,
-                        foregroundColor: Colors.white,
-                        elevation: 8,
-                        shadowColor: AppColors.playerX.withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        decoration: BoxDecoration(
+                           color: AppColors.playerX,
+                           borderRadius: BorderRadius.circular(30),
+                           boxShadow: [
+                             BoxShadow(
+                               color: AppColors.playerX.withValues(alpha: 0.5),
+                               blurRadius: 15,
+                               offset: const Offset(0, 8),
+                             )
+                           ]
                         ),
-                      ),
-                      child: const Text(
-                        'PLAY GAME',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'PLAY GAME',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -109,18 +120,24 @@ class HomeView extends GetView<HomeController> {
                 children: [
                    FadeInDown(
                     delay: const Duration(milliseconds: 800),
-                    child: _buildIconButton(
-                      icon: Icons.exit_to_app_rounded,
-                      onTap: controller.onExitApp,
-                      color: AppColors.playerX, // Use existing color that works well
+                    child: AnimatedScaleButton(
+                      onPressed: () => Get.find<ThemeService>().cycleTheme(),
+                      scale: 0.9,
+                      child: _buildIconButtonContent(
+                        icon: Icons.palette_outlined,
+                        color: AppColors.playerX,
+                      ),
                     ),
                   ),
                   FadeInDown(
                     delay: const Duration(milliseconds: 900),
-                    child: _buildIconButton(
-                      icon: Icons.palette_outlined,
-                      onTap: () => Get.find<ThemeService>().cycleTheme(),
-                      color: AppColors.playerX,
+                    child: AnimatedScaleButton(
+                      onPressed: controller.onExitApp,
+                      scale: 0.9,
+                      child: _buildIconButtonContent(
+                        icon: Icons.exit_to_app_rounded,
+                        color: AppColors.playerX,
+                      ),
                     ),
                   ),
                 ],
@@ -132,12 +149,12 @@ class HomeView extends GetView<HomeController> {
     ));
   }
 
-  Widget _buildIconButton({
+  Widget _buildIconButtonContent({
     required IconData icon,
-    required VoidCallback onTap,
     required Color color,
   }) {
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.surface.withValues(alpha: 0.8),
         shape: BoxShape.circle,
@@ -149,20 +166,10 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(30),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
-          ),
-        ),
+      child: Icon(
+        icon,
+        color: color,
+        size: 24,
       ),
     );
   }

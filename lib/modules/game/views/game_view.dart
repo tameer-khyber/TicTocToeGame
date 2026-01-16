@@ -7,6 +7,8 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../data/models/player_model.dart';
 import '../viewmodels/game_viewmodel.dart';
+import '../widgets/drawing_mark.dart';
+import '../../../core/widgets/animated_background.dart';
 
 class GameView extends GetView<GameViewModel> {
   const GameView({super.key});
@@ -46,6 +48,9 @@ class GameView extends GetView<GameViewModel> {
               ),
             ),
           ),
+          
+          // Animated Shapes Background
+          const Positioned.fill(child: AnimatedBackground()),
           
           // Main Content
           SafeArea(
@@ -117,64 +122,56 @@ class GameView extends GetView<GameViewModel> {
                             ),
                             itemCount: 9,
                             itemBuilder: (context, index) {
-                              return Obx(() {
-                                final player = controller.board[index];
-                                final isWinningCell = controller.winningLine.contains(index);
-                                
-                                return GestureDetector(
+                              return FadeInUp(
+                                duration: const Duration(milliseconds: 600),
+                                delay: Duration(milliseconds: 100 * index), // Staggered delay
+                                child: GestureDetector(
                                   onTap: () => controller.makeMove(index),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOutBack,
-                                    decoration: BoxDecoration(
-                                      color: isWinningCell 
-                                          ? AppColors.winningLine.withValues(alpha: 0.2)
-                                          : AppColors.surface,
-                                      borderRadius: BorderRadius.circular(AppSizes.r16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: isWinningCell 
-                                              ? AppColors.winningLine.withValues(alpha: 0.3)
-                                              : AppColors.shadow.withValues(alpha: 0.5),
-                                          blurRadius: isWinningCell ? 12 : 4,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                      border: isWinningCell
-                                          ? Border.all(
-                                              color: AppColors.winningLine,
-                                              width: 3,
-                                            )
-                                          : null,
-                                    ),
-                                    child: Center(
-                                      child: player == Player.none 
-                                          ? const SizedBox.shrink()
-                                          : ElasticIn( // Animate X/O entry
-                                              child: Text(
-                                                player == Player.X ? 'X' : 'O',
-                                                style: TextStyle(
-                                                  fontSize: 56, // Larger text
-                                                  fontWeight: FontWeight.w900,
-                                                  color: player == Player.X 
-                                                      ? AppColors.playerX 
-                                                      : AppColors.playerO,
-                                                  shadows: [
-                                                    Shadow(
-                                                      color: (player == Player.X 
-                                                          ? AppColors.playerX 
-                                                          : AppColors.playerO).withValues(alpha: 0.4),
-                                                      blurRadius: 12,
-                                                      offset: const Offset(0, 4),
-                                                    ),
-                                                  ],
-                                                ),
+                                  child: Obx(() {
+                                    final player = controller.board[index];
+                                    final isWinningCell = controller.winningLine.contains(index);
+                                    
+                                    return AnimatedContainer(
+                                      duration: const Duration(milliseconds: 300),
+                                      curve: Curves.easeInOutBack,
+                                      decoration: BoxDecoration(
+                                        color: isWinningCell 
+                                            ? AppColors.winningLine.withValues(alpha: 0.2)
+                                            : AppColors.surface,
+                                        borderRadius: BorderRadius.circular(AppSizes.r16),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: isWinningCell 
+                                                ? AppColors.winningLine.withValues(alpha: 0.3)
+                                                : AppColors.shadow.withValues(alpha: 0.5),
+                                            blurRadius: isWinningCell ? 12 : 4,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                        border: isWinningCell
+                                            ? Border.all(
+                                                color: AppColors.winningLine,
+                                                width: 3,
+                                              )
+                                            : null,
+                                      ),
+                                      child: Center(
+                                        child: player == Player.none 
+                                            ? const SizedBox.shrink()
+                                            : DrawingMark(
+                                                player: player,
+                                                size: 50,
+                                                color: isWinningCell
+                                                    ? AppColors.winningLine
+                                                    : (player == Player.X 
+                                                        ? AppColors.playerX 
+                                                        : AppColors.playerO),
                                               ),
-                                            ),
-                                    ),
-                                  ),
-                                );
-                              });
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              );
                             },
                           ),
                         ),
