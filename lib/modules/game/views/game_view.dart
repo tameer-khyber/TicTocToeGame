@@ -9,6 +9,8 @@ import '../../../data/models/player_model.dart';
 import '../viewmodels/game_viewmodel.dart';
 import '../widgets/drawing_mark.dart';
 import '../../../core/widgets/animated_background.dart';
+import '../../../core/services/audio_service.dart';
+import '../../../core/widgets/hover_scale_button.dart';
 
 class GameView extends GetView<GameViewModel> {
   const GameView({super.key});
@@ -21,7 +23,27 @@ class GameView extends GetView<GameViewModel> {
         title: FadeInDown(
           child: const Text(AppStrings.appTitle),
         ),
+
         automaticallyImplyLeading: false,
+        leading: HoverScaleButton(
+          onPressed: () => Get.back(),
+          child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: HoverScaleButton(
+              onPressed: () => Get.find<AudioService>().toggleMute(),
+              child: Obx(() {
+                 final isMuted = Get.find<AudioService>().isMuted.value;
+                 return Icon(
+                   isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
+                   color: AppColors.textPrimary,
+                 );
+              }),
+            ),
+          ),
+        ],
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,

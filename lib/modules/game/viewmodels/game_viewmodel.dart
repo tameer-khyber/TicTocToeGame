@@ -4,6 +4,9 @@ import '../../../routes/app_routes.dart';
 import '../../../data/models/player_model.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/services/audio_service.dart';
+import '../../../core/enums/game_enums.dart';
+import '../../../core/utils/ai_utils.dart';
 import 'package:flutter/material.dart';
 
 class GameViewModel extends GetxController {
@@ -14,13 +17,27 @@ class GameViewModel extends GetxController {
   var isDraw = false.obs;
   var winningLine = <int>[].obs; // Indices of winning cells for different styling
   
+  final AudioService _audioService = Get.find<AudioService>();
+  
   late ConfettiController confettiController;
+
+  // Game Config
+  late GameMode gameMode;
+  late GameDifficulty difficulty;
+  bool get isPvC => gameMode == GameMode.pvc;
 
   @override
   void onInit() {
     super.onInit();
     confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    
+    // Parse arguments
+    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    gameMode = args['mode'] ?? GameMode.pvp;
+    difficulty = args['difficulty'] ?? GameDifficulty.easy;
   }
+
+
 
   @override
   void onClose() {
@@ -58,22 +75,52 @@ class GameViewModel extends GetxController {
     if (board[index] != Player.none || winner.value != Player.none || isDraw.value) {
       return;
     }
-
-    board[index] = currentPlayer.value;
     
+    // If it's Bot's turn (O) in PvC, block user click
+    if (isPvC && currentPlayer.value == Player.O) return;
+
+    _executeMove(index);
+  }
+  
+  void _executeMove(int index) {
+    board[index] = currentPlayer.value;
+    _audioService.playMove();
+
     if (_checkWinner(currentPlayer.value)) {
       winner.value = currentPlayer.value;
       confettiController.play();
+      _audioService.playWin();
       Future.delayed(const Duration(seconds: 2), () {
-        Get.offNamed(AppRoutes.gameOver, arguments: winner.value == Player.X ? AppStrings.winX : AppStrings.winO);
+        Get.offNamed(AppRoutes.gameOver, arguments: {
+          'result': winner.value == Player.X ? AppStrings.winX : AppStrings.winO,
+          'mode': gameMode,
+          'difficulty': difficulty
+        });
       });
     } else if (!board.contains(Player.none)) {
       isDraw.value = true;
+      _audioService.playDraw();
       Future.delayed(const Duration(seconds: 2), () {
-        Get.offNamed(AppRoutes.gameOver, arguments: AppStrings.draw);
+        Get.offNamed(AppRoutes.gameOver, arguments: {
+          'result': AppStrings.draw,
+          'mode': gameMode,
+          'difficulty': difficulty
+        });
       });
     } else {
       currentPlayer.value = currentPlayer.value == Player.X ? Player.O : Player.X;
+      _checkBotTurn();
+    }
+  }
+  
+  void _checkBotTurn() {
+    if (isPvC && currentPlayer.value == Player.O && winner.value == Player.none && !isDraw.value) {
+      Future.delayed(const Duration(milliseconds: 600), () {
+         final aiMove = TicTacToeAI.getBestMove(board, difficulty);
+         if (aiMove != -1) {
+           _executeMove(aiMove);
+         }
+      });
     }
   }
 
