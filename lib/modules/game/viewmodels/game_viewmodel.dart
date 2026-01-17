@@ -35,6 +35,10 @@ class GameViewModel extends GetxController {
     // Parse arguments
     final args = Get.arguments as Map<String, dynamic>? ?? {};
     gameArguments = GameArguments.fromMap(args);
+    
+    // Ensure fresh state
+    resetGame();
+    print("Game Initialized: Mode=${gameArguments.mode}, P1=${gameArguments.player1Name}, P2=${gameArguments.player2Name}, StartingPlayer=${gameArguments.startingPlayer}");
   }
 
   @override
@@ -97,19 +101,23 @@ class GameViewModel extends GetxController {
     board[index] = currentPlayer.value;
     _audioService.playMove();
 
+    print("Player ${currentPlayer.value} move at $index");
     if (_checkWinner(currentPlayer.value)) {
+      print("Winner found: ${currentPlayer.value}");
       winner.value = currentPlayer.value;
       confettiController.play();
       _audioService.playWin();
+      
       final result = winner.value == Player.X 
-          ? "${gameArguments.player1Name} Wins!" 
-          : "${gameArguments.player2Name} Wins!";
+          ? "${gameArguments.player1Name} Won the match" 
+          : "${gameArguments.player2Name} Won the match";
+          
       _navigateToGameOver(result);
       // Keep move locked until navigation
     } else if (!board.contains(Player.none)) {
       isDraw.value = true;
       _audioService.playDraw();
-      _navigateToGameOver(AppStrings.draw);
+      _navigateToGameOver("match Draw");
       // Keep move locked until navigation
     } else {
       // Switch player
@@ -129,6 +137,7 @@ class GameViewModel extends GetxController {
       NavigationHelpers.navigateToGameOver(
         result: result,
         gameArguments: gameArguments,
+        lastStartingPlayer: gameArguments.startingPlayer ?? Player.X, // Pass who started this game
       );
     });
   }
@@ -140,7 +149,7 @@ class GameViewModel extends GetxController {
       
       // Reduced delay from 600ms to 250ms for faster response
       Future.delayed(const Duration(milliseconds: 250), () {
-         final aiMove = TicTacToeAI.getBestMove(board, gameArguments.difficulty);
+         final aiMove = TicTacToeAI.getBestMove(List<Player>.from(board), gameArguments.difficulty);
          if (aiMove != -1) {
            _executeMove(aiMove);
          }
@@ -150,15 +159,28 @@ class GameViewModel extends GetxController {
 
   void resetGame() {
     board.assignAll(List<Player>.filled(9, Player.none));
-    currentPlayer.value = Player.X;
+    
+    // Use the specified starting player, or default to X
+    currentPlayer.value = gameArguments.startingPlayer ?? Player.X;
+    
     winner.value = Player.none;
     isDraw.value = false;
     winningLine.clear();
     isProcessingMove.value = false;
     confettiController.stop();
+    print("Game Reset executed. Winner cleared. Current player reset to ${currentPlayer.value}.");
+    
+    // If it's Bot's turn immediately (e.g. Bot starts as O because human started previous game as X, 
+    // wait... actually Bot is usually O. If Bot is O and it's O's turn, Bot plays.
+    // If Bot is P1 (unlikely per current logic but possible), check logic handles it.
+    // Logic: If PvC and currentPlayer is O (Bot), trigger move.
+    _checkBotTurn();
   }
 
   bool _checkWinner(Player player) {
+    print("=== Checking winner for $player ===");
+    print("Board state: $board");
+    
     const List<List<int>> winPatterns = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
       [0, 3, 6], [1, 4, 7], [2, 5, 8], // Cols
@@ -170,9 +192,11 @@ class GameViewModel extends GetxController {
           board[pattern[1]] == player &&
           board[pattern[2]] == player) {
         winningLine.assignAll(pattern);
+        print("WIN FOUND! Pattern: $pattern for player $player");
         return true;
       }
     }
+    print("No win found for $player");
     return false;
   }
 }

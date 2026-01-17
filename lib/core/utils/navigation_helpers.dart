@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../routes/app_routes.dart';
 import '../../data/models/game_arguments.dart';
+import '../../data/models/player_model.dart';
 
 /// Navigation helper methods to eliminate duplicate navigation patterns
 class NavigationHelpers {
@@ -8,13 +9,14 @@ class NavigationHelpers {
 
   /// Navigate to game screen with arguments
   static void navigateToGame(GameArguments arguments) {
-    Get.toNamed(AppRoutes.game, arguments: arguments.toMap());
+    Get.offNamed(AppRoutes.game, arguments: arguments.toMap());
   }
 
   /// Navigate to game over screen
   static void navigateToGameOver({
     required String result,
     required GameArguments gameArguments,
+    required Player lastStartingPlayer,
   }) {
     Get.offNamed(
       AppRoutes.gameOver,
@@ -22,6 +24,9 @@ class NavigationHelpers {
         'result': result,
         'mode': gameArguments.mode,
         'difficulty': gameArguments.difficulty,
+        'player1Name': gameArguments.player1Name,
+        'player2Name': gameArguments.player2Name,
+        'lastStartingPlayer': lastStartingPlayer.index, // Store to toggle next time
       },
     );
   }
