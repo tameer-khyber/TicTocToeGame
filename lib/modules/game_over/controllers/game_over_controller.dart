@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import '../../../core/utils/navigation_helpers.dart';
 import '../../../data/models/game_arguments.dart';
 import '../../../data/models/player_model.dart';
-import '../../../core/enums/game_enums.dart';
 
 class GameOverController extends GetxController {
   late String result;

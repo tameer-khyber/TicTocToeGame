@@ -8,11 +8,11 @@ class HoverScaleButton extends StatefulWidget {
   final double scaleAmount;
 
   const HoverScaleButton({
-    Key? key,
+    super.key,
     required this.child,
     this.onPressed,
     this.scaleAmount = 1.05,
-  }) : super(key: key);
+  });
 
   @override
   State<HoverScaleButton> createState() => _HoverScaleButtonState();

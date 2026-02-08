@@ -38,7 +38,7 @@ class GameViewModel extends GetxController {
     
     // Ensure fresh state
     resetGame();
-    print("Game Initialized: Mode=${gameArguments.mode}, P1=${gameArguments.player1Name}, P2=${gameArguments.player2Name}, StartingPlayer=${gameArguments.startingPlayer}");
+    // print("Game Initialized: Mode=${gameArguments.mode}, P1=${gameArguments.player1Name}, P2=${gameArguments.player2Name}, StartingPlayer=${gameArguments.startingPlayer}");
   }
 
   @override
@@ -101,9 +101,9 @@ class GameViewModel extends GetxController {
     board[index] = currentPlayer.value;
     _audioService.playMove();
 
-    print("Player ${currentPlayer.value} move at $index");
+    // print("Player ${currentPlayer.value} move at $index");
     if (_checkWinner(currentPlayer.value)) {
-      print("Winner found: ${currentPlayer.value}");
+      // print("Winner found: ${currentPlayer.value}");
       winner.value = currentPlayer.value;
       confettiController.play();
       _audioService.playWin();
@@ -168,7 +168,7 @@ class GameViewModel extends GetxController {
     winningLine.clear();
     isProcessingMove.value = false;
     confettiController.stop();
-    print("Game Reset executed. Winner cleared. Current player reset to ${currentPlayer.value}.");
+    // print("Game Reset executed. Winner cleared. Current player reset to ${currentPlayer.value}.");
     
     // If it's Bot's turn immediately (e.g. Bot starts as O because human started previous game as X, 
     // wait... actually Bot is usually O. If Bot is O and it's O's turn, Bot plays.
@@ -178,8 +178,8 @@ class GameViewModel extends GetxController {
   }
 
   bool _checkWinner(Player player) {
-    print("=== Checking winner for $player ===");
-    print("Board state: $board");
+    // print("=== Checking winner for $player ===");
+    // print("Board state: $board");
     
     const List<List<int>> winPatterns = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -192,11 +192,11 @@ class GameViewModel extends GetxController {
           board[pattern[1]] == player &&
           board[pattern[2]] == player) {
         winningLine.assignAll(pattern);
-        print("WIN FOUND! Pattern: $pattern for player $player");
+        // print("WIN FOUND! Pattern: $pattern for player $player");
         return true;
       }
     }
-    print("No win found for $player");
+    // print("No win found for $player");
     return false;
   }
 }
