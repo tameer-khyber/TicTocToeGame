@@ -1,0 +1,26 @@
+Project Title: Modern Tic-Tac-Toe Application
+
+Overview:
+I am thrilled to showcase a modern, highly interactive, and elegantly designed Tic-Tac-Toe application built entirely with Flutter. Developed with a strong focus on clean architecture, engaging User Experience (UX), and efficient state management, this application revitalizes the classic game. It seamlessly supports both Player vs. Player (PvP) and Player vs. Computer (PvC) modes, complete with an intelligent AI opponent.
+
+Technologies & Tools Used:
+• Framework: Flutter
+• Programming Language: Dart
+• State Management & Routing: GetX (Utilized for highly reactive state updates, dependency injection, and seamless screen transitions)
+• Animations: animate_do & confetti (Integrated to bring the UI to life with fluid micro-animations and rewarding victory celebrations)
+• Audio System: audioplayers (Employed for immersive auditory feedback during moves, wins, and draws)
+• Typography: Google Fonts (For sleek, responsive, and modern text styling)
+• Architecture: Modular / Feature-First Pattern (Ensuring maximum scalability, maintainability, and clean code separation)
+
+Key Features & Capabilities:
+• Versatile Game Modes: Enjoy classic local multiplayer (PvP) or challenge yourself against the computer (PvC).
+• Smart AI Opponent: Features an algorithmically driven AI that provides a dynamic and challenging gameplay experience with adjustable difficulties.
+• Real-Time Game Logic: A highly responsive game board that instantly accurately tracks turns, prevents illegal moves, and detects winning patterns or draws with zero lag.
+• Dynamic Visual State: Automatically highlights winning line combinations and clearly indicates the active player's turn using intuitive color schemes.
+
+UI/UX Design Concepts:
+• Modern & Minimalist Interface: Crafted with a clean UI design that prioritizes usability avoiding unnecessary clutter while maintaining deep user engagement.
+• Micro-Animations: Subtle, polished animations across menus, interactive buttons, and game piece placements to ensure a premium, fluid feel.
+• Immersive Feedback Loop: Delivers a satisfying tactile experience by combining customized sound effects with visual celebrations (like full-screen confetti drops) to reward player achievements.
+
+This application serves as a strong demonstration of my proficiency in cross-platform mobile development, robust state management solutions, and the ability to craft delightful, user-centric interfaces.
